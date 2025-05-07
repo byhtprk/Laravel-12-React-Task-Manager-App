@@ -22,7 +22,7 @@ class ListStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'requred|string|max:255|min:1',
+            'title' => 'required|string|max:255|min:1',
             'description' => 'nullable|string'
         ];
     }

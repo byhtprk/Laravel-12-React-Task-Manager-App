@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    protected $guarted = [];
+    protected $guarded = [];
 
     public function list(): BelongsTo
     {
-        return $this->belongsTo(Liste::class);
+        return $this->belongsTo(Liste::class, 'list_id');
     }
 }

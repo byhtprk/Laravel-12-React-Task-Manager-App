@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Liste extends Model
 {
-    protected $guarted = [];
+    protected $guarded = [];
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class, 'list_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belonsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 }

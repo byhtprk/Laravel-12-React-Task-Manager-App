@@ -18,8 +18,8 @@ class ListController extends Controller
     {
         $lists = Liste::where('user_id', Auth::user()->id)->with('tasks')->get();
 
-        return Inertia::render('list.index',[
-            'list' => $lists,
+        return Inertia::render('lists/index',[
+            'lists' => $lists,
             'flash' =>[
                 'success' => session('success'),
                 'error' => session('error')
