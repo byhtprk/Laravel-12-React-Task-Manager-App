@@ -211,7 +211,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                             reset();
                         }
                     }}>
-                        <Button className="bg-primary hover:bg-primary/90 text-black shadow-lg" onClick={() => {
+                        <Button className="bg-primary hover:bg-primary/90 text-secondary shadow-lg" onClick={() => {
                             setEditingTask(null);
                             reset();
                             setIsOpen(true);
@@ -287,7 +287,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                     <Label htmlFor="is_completed">Completed</Label>
                                     <InputError message={errors.is_completed} />
                                 </div>
-                                <Button type="submit" disabled={processing} className="bg-primary hover:bg-primary/90 w-full text-black shadow-lg">
+                                <Button type="submit" disabled={processing} className="bg-primary hover:bg-primary/90 w-full text-secondary shadow-lg">
                                     {editingTask ? 'Update' : 'Create'}
                                 </Button>
                             </form>
