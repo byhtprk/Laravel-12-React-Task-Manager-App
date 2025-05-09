@@ -9,6 +9,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { CheckCircle2, Pencil, Plus, Trash2, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import InputError from '@/components/input-error';
 
 interface List {
     id: number;
@@ -67,6 +68,7 @@ export default function ListsIndex({ lists, flash }: Props) {
         put,
         processing,
         reset,
+        errors,
         delete: destroy,
     } = useForm({
         title: '',
@@ -143,10 +145,12 @@ export default function ListsIndex({ lists, flash }: Props) {
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title</Label>{' '}
                                     <Input id="title" value={data.title} onChange={(e) => setData('title', e.target.value)} required />
+                                    <InputError message={errors.title} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="description">Description</Label>{' '}
                                     <Textarea id="description" value={data.description} onChange={(e) => setData('description', e.target.value)} />
+                                    <InputError message={errors.description} />
                                 </div>{' '}
                                 <Button type="submit" disabled={processing}>
                                     {editingList ? 'Update' : 'Create'}

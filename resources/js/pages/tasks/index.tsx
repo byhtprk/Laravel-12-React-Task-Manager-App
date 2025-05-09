@@ -9,6 +9,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Calendar, CheckCircle, CheckCircle2, ChevronLeft, ChevronRight, List, Pencil, Plus, Search, Trash2, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import InputError from '@/components/input-error';
 
 interface Task {
     id: number;
@@ -93,6 +94,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
         put,
         processing,
         reset,
+        errors,
         delete: destroy,
     } = useForm({
         title: '',
@@ -209,7 +211,11 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                             reset();
                         }
                     }}>
-                        <Button className="bg-primary hover:bg-primary/90 text-black shadow-lg" onClick={() => setIsOpen(true)}>
+                        <Button className="bg-primary hover:bg-primary/90 text-black shadow-lg" onClick={() => {
+                            setEditingTask(null);
+                            reset();
+                            setIsOpen(true);
+                        }}>
                             <Plus className="mr-2 h-4 w-4" />
                             New Task
                         </Button>
@@ -231,6 +237,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                         required
                                         className="focus:ring-primary focus:ring-2"
                                     />
+                                    <InputError message={errors.title} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="description">Description</Label>
@@ -240,6 +247,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                         onChange={(e) => setData('description', e.target.value)}
                                         className="focus:ring-primary focus:ring-2"
                                     />
+                                    <InputError message={errors.description} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="list_id">List</Label>
@@ -255,6 +263,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <InputError message={errors.list_id} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="due_date">Due Date</Label>
@@ -265,6 +274,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                         onChange={(e) => setData('due_date', e.target.value)}
                                         className="focus:ring-primary focus:ring-2"
                                     />
+                                    <InputError message={errors.due_date} />
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <input
@@ -275,6 +285,7 @@ export default function TasksIndex({ tasks, lists, filters = { search: '', filte
                                         className="focus:ring-primary h-4 w-4 rounded border-gray-300 focus:ring-2"
                                     />
                                     <Label htmlFor="is_completed">Completed</Label>
+                                    <InputError message={errors.is_completed} />
                                 </div>
                                 <Button type="submit" disabled={processing} className="bg-primary hover:bg-primary/90 w-full text-black shadow-lg">
                                     {editingTask ? 'Update' : 'Create'}
