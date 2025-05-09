@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -123,13 +123,18 @@ export default function ListsIndex({ lists, flash }: Props) {
 
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Lists</h1>{' '}
-                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                        <DialogTrigger>
-                            <Button>
-                                <Plus className="mr-2 h-4 w-4" />
-                                New List
-                            </Button>{' '}
-                        </DialogTrigger>{' '}
+                    <Dialog open={isOpen} onOpenChange={(open) => {
+                        setIsOpen(open);
+                        if (!open) {
+                            setEditingList(null);
+                            reset();
+                        }
+                    }}>
+                        <Button onClick={() => setIsOpen(true)}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            New List
+                        </Button>{' '}
+
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>{editingList ? 'Edit List' : 'Create New List'}</DialogTitle>{' '}

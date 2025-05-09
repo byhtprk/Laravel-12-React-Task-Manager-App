@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\Task\TaskStoreRequest;
+use App\Http\Requests\Admin\Task\TaskUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
-use App\Models\Liste;
+use App\Models\Liste; // Ensure the TaskController uses the 'listes' table instead of 'lists'.
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,29 +23,32 @@ class TaskController extends Controller
         })
         ->orderBy('created_at', 'desc');
 
+        // Handle search
         if (request()->has('search')) {
-            $search = request()->input('search');
-            $query->where('title', function($q) use ($search) {
-                $q->where('title', 'like', '%{$search}}')
-                ->orWhere('description', 'like', '%{$search}%');
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
-        if(request()->has('filter') && request()->input('filter') !== 'all') {
+        // Handle completion filter
+        if (request()->has('filter') && request('filter') !== 'all') {
             $query->where('is_completed', request('filter') === 'completed');
         }
 
         $tasks = $query->paginate(10);
+
         $lists = Liste::where('user_id', Auth::user()->id)->get();
 
         return Inertia::render('tasks/index', [
             'tasks' => $tasks,
             'lists' => $lists,
-            'filter' => [
-               'search' => request('search', ''),
-               'filter' => request('filter', ''),
+            'filters' => [
+                'search' => request('search', ''),
+                'filter' => request('filter', 'all'),
             ],
-            'flash' =>[
+            'flash' => [
                 'success' => session('success'),
                 'error' => session('error')
             ]
@@ -61,9 +66,14 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskStoreRequest $request)
     {
-        //
+        $data = $request->all();
+
+        Task::create($data);
+
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully');
+
     }
 
     /**
@@ -85,16 +95,22 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(TaskUpdateRequest $request, Task $task)
     {
-        //
+        $data = $request->all();
+
+        $task->update($data);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully');
     }
 }
+
